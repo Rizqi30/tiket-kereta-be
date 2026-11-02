@@ -1,0 +1,22 @@
+# env variables
+.env
+*.env.local
+
+# file compiled by Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# file form code editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# log and crash dump
+*.log

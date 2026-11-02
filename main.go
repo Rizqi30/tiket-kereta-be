@@ -1,27 +1,36 @@
 package main
 
 import (
-	"net/http"
+	"log"
+	"tiket-kereta-be/config"
+	"tiket-kereta-be/models"
+	"tiket-kereta-be/routes"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Inisialisasi Gin router default (sudah termasuk logger & recovery)
-	r := gin.Default()
+	// load file ..env
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: File .env not found")
+	}
 
-	// Pasang middleware CORS agar bisa diakses oleh frontend
+	// connect to PostgreSQl db
+	config.ConnectDB()
+
+	// auto migrate tabel User (automatic create table in Postgres if not exist)
+	config.DB.AutoMigrate(&models.User{})
+
+	// init Gin Router
+	r := gin.Default()
 	r.Use(cors.Default())
 
-	// Endpoint pengecekan kesehatan server (opsional, untuk memastikan backend aktif)
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to Tiket Kereta API Service",
-			"status":  "active",
-		})
-	})
+	// route API
+	routes.SetupRouter(r)
 
-	// Jalankan server di port 3001
+	// run server in port 3001
 	r.Run(":3001")
 }
