@@ -22,7 +22,7 @@ func main() {
 	config.ConnectDB()
 
 	// auto migrate tabel User (automatic create table in Postgres if not exist)
-	config.DB.AutoMigrate(&models.User{})
+	config.DB.AutoMigrate(&models.User{}, &models.Station{})
 
 	// init Gin Router
 	r := gin.Default()
