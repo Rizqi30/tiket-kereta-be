@@ -125,3 +125,25 @@ func Login(c *gin.Context) {
 		},
 	})
 }
+
+// GetMe - take user profile who login based on JWT token
+func GetMe(c *gin.Context) {
+	// take user_id from context (already di-set by AuthMiddleware)
+	userID, _ := c.Get("user_id")
+
+	var user models.User
+	if err := config.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": gin.H{
+			"id": user.ID,
+			"name": user.Name,
+			"email": user.Email,
+			"phone": user.Phone,
+			"role": user.Role,
+		},
+	})
+}
