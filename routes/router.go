@@ -20,10 +20,13 @@ func SetupRouter(r *gin.Engine) *gin.Engine {
 			auth.GET("/me", middleware.AuthMiddleware(), controllers.GetMe)
 		}
 
-		// API List Stations (PUBLIC)
+		// List Stations (PUBLIC)
 		api.GET("/stations", controllers.GetStations)
 		api.GET("/stations/:id", controllers.GetStationByID)
 
+		// List Train (PUBLIC)
+		api.GET("/trains", controllers.GetTrains)
+		api.GET("/trains/:id", controllers.GetTrainByID)
 
 		// ROLE ADMIN
 		admin := api.Group("/admin")
@@ -33,6 +36,16 @@ func SetupRouter(r *gin.Engine) *gin.Engine {
 			admin.POST("/stations", controllers.CreateStation)
 			admin.PUT("/stations/:id", controllers.UpdateStation)
 			admin.DELETE("/stations/:id", controllers.DeleteStation)
+
+			// TRAIN
+			admin.POST("/trains", controllers.CreateTrain)
+			admin.PUT("/trains/:id", controllers.UpdateTrain)
+			admin.DELETE("/trains/:id", controllers.DeleteTrain)
+
+			// CARRIAGE
+			admin.POST("/trains/:id/carriages", controllers.CreateCarriage)
+			admin.PUT("/carriages/:id", controllers.UpdateCarriage)
+			admin.DELETE("/carriages/:id", controllers.DeleteCarriage)
 		}
 	}
 
