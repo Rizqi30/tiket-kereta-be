@@ -57,7 +57,11 @@ func CreateTrain(c *gin.Context) {
 		Code: input.Code,
 	}
 
-	config.DB.Create(&train)
+	// Cek error insert train
+	if err := config.DB.Create(&train).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create train: " + err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Train successfully added",
@@ -161,7 +165,11 @@ func CreateCarriage(c *gin.Context) {
 		TotalSeats: input.TotalSeats,
 	}
 
-	config.DB.Create(&carriage)
+	// Cek error insert carriage
+	if err := config.DB.Create(&carriage).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create carriage: " + err.Error()})
+		return
+	}
 
 	// AUTO GENERATE SEAT
 	// example: 50 seat -> 1A, 1B, 1C, 1D, 2A, ... sampai 13B

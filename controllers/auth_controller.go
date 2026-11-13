@@ -63,9 +63,13 @@ func Register(c *gin.Context) {
 		Role: userRole,
 	}
 
-	config.DB.Create(&user)
+	// check error insert user
+	if err := config.DB.Create(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user: " + err.Error()})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Success Register",
 		"user": gin.H{
 			"id": user.ID,

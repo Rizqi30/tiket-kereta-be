@@ -28,6 +28,7 @@ func main() {
 		&models.Train{},
 		&models.Carriage{},
 		&models.Seat{},
+		&models.Schedule{},
 	)
 
 	// init Gin Router

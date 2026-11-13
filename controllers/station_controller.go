@@ -58,7 +58,11 @@ func CreateStation(c *gin.Context) {
 		City: input.City,
 	}
 
-	config.DB.Create(&station)
+	// Cek error insert station
+	if err := config.DB.Create(&station).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create station: " + err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Station successfully added",
